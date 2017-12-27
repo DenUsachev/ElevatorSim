@@ -1,30 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ElevatorSim
 {
     class ElevatorHandler : IObservable<Elevator>
     {
-        private IObserver<Elevator> _elevatorController;
-        private readonly Elevator _elevator;
+        private List<IObserver<Elevator>> _observers;
 
-        public ElevatorHandler(Elevator elevator)
+        public ElevatorHandler()
         {
-            _elevator = elevator;
+            _observers = new List<IObserver<Elevator>>();
         }
 
         public IDisposable Subscribe(IObserver<Elevator> observer)
         {
-            if (_elevatorController == null)
-            {
-                _elevatorController = observer;
-                _elevator.Status = ElevatorStatus.Idle;
-                observer.OnNext(_elevator);
-            }
-            return new Unsubscriber<Elevator>();
+            if (!_observers.Contains(observer))
+                _observers.Add(observer);
+
+            return new Unsubscriber(_observers, observer);
         }
     }
-
-
 }

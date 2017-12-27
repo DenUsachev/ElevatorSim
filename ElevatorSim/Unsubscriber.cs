@@ -3,17 +3,21 @@ using System.Collections.Generic;
 
 namespace ElevatorSim
 {
-    class Unsubscriber<T> : IDisposable
+    class Unsubscriber : IDisposable
     {
-        private IList<IObserver<Elevator>> _observers;
+        private List<IObserver<Elevator>> _observers;
         private IObserver<Elevator> _observer;
+
+        public Unsubscriber(List<IObserver<Elevator>> observers, IObserver<Elevator> observer)
+        {
+            _observers = observers;
+            _observer = observer;
+        }
 
         public void Dispose()
         {
-            if (_observers != null && _observers.Contains(_observer))
-            {
+            if (!(_observer == null))
                 _observers.Remove(_observer);
-            }
         }
     }
 }

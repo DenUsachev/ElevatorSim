@@ -1,16 +1,20 @@
-﻿namespace ElevatorSim
-{
-    class Elevator
-    {
-        public ElevatorStatus Status { get; set; }
-        public decimal Speed { get; set; }
-        public decimal OpenDoorsInterval { get; set; }
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
-        public Elevator(decimal speed, decimal openDoorsInterval)
+namespace ElevatorSim
+{
+    struct Elevator
+    {
+        public ElevatorStatus Status { get; private set; }
+        public decimal Speed { get; private set; }
+        public decimal DoorsDelay { get; private set; }
+
+        public Elevator(decimal speed, decimal doorsDelay)
         {
             Status = ElevatorStatus.Idle;
             Speed = speed;
-            OpenDoorsInterval = openDoorsInterval;
+            DoorsDelay = doorsDelay;
         }
     }
 }
