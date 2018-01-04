@@ -1,6 +1,6 @@
 ﻿namespace ElevatorSim
 {
-    enum ElevatorStatus
+    public enum ElevatorStatus
     {
         Idle,
         OnTheMove,
