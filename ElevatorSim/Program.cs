@@ -32,9 +32,10 @@ namespace ElevatorSim
             var doorsDelay = ReadDecimalValueFromConsole(inputString);
 
             _elevator = new Elevator(elevatorSpeed.Value, doorsDelay.Value);
-            _building.SetElevator(_elevator);
 
-            Console.WriteLine("Initial set-up is complete. Hit Enter to run simulation. Press Q to stop simulation.");
+            Console.WriteLine("Initial set-up is complete. Hit Enter to run simulation. Hit Q to stop simulation.");
+            Console.ReadLine();
+            _building.SetElevator(_elevator);
             Console.ReadLine();
         }
 

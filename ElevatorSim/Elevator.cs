@@ -1,17 +1,57 @@
-﻿namespace ElevatorSim
+﻿using System;
+using System.Collections.Generic;
+
+namespace ElevatorSim
 {
-    public class Elevator
+    public class Elevator : IObservable<Elevator>
     {
-        public ElevatorStatus Status { get; set; }
-        public decimal Speed { get; set; }
-        public decimal DoorsDelay { get; set; }
-        public int CurrentFloor { get; set; }
+        private readonly List<IObserver<Elevator>> _elevatorObservers;
+        private decimal _speed;
+        private decimal _doorsDelay;
+        private bool _doorsClosed = true;
+
+        public ElevatorStatus Status { get; private set; }
+        public int CurrentFloor { get; private set; }
+
+        private void NotifyObservers()
+        {
+            foreach (var observer in _elevatorObservers)
+            {
+                observer.OnNext(this);
+                if (_doorsClosed && Status == ElevatorStatus.Idle)
+                {
+                    observer.OnCompleted();
+                }
+            }
+        }
 
         public Elevator(decimal speed, decimal doorsDelay)
         {
+            _elevatorObservers = new List<IObserver<Elevator>>();
+
+            _speed = speed;
+            _doorsDelay = doorsDelay;
+        }
+
+        private void Move(int floor)
+        {
+
+        }
+
+        public void Set(int floor)
+        {
             Status = ElevatorStatus.Idle;
-            Speed = speed;
-            DoorsDelay = doorsDelay;
+            CurrentFloor = 1;
+            NotifyObservers();
+        }
+
+        public IDisposable Subscribe(IObserver<Elevator> observer)
+        {
+            if (!_elevatorObservers.Contains(observer))
+            {
+                _elevatorObservers.Add(observer);
+            }
+            return new Unsubscriber(_elevatorObservers, observer);
         }
     }
 }
