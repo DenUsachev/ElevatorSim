@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace ElevatorSim
 {
@@ -33,20 +34,21 @@ namespace ElevatorSim
             _elevator = new Elevator(elevatorSpeed.Value, doorsDelay.Value);
             _building.SetElevator(_elevator);
 
-            Console.WriteLine("Initial set-up is complete.");
+            Console.WriteLine("Initial set-up is complete. Hit Enter to run simulation. Press Q to stop simulation.");
             Console.ReadLine();
         }
 
-        static private decimal? ReadDecimalValueFromConsole(string input)
+        private static decimal? ReadDecimalValueFromConsole(string input)
         {
-            if (decimal.TryParse(input, out decimal value))
+            if (decimal.TryParse(input.Replace(',', '.'), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture,
+                out decimal value))
             {
                 return value;
             }
             return null;
         }
 
-        static private int? ReadIntValueFromConsole(string input)
+        private static int? ReadIntValueFromConsole(string input)
         {
             if (int.TryParse(input, out int value))
             {
