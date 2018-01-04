@@ -5,6 +5,7 @@
         public ElevatorStatus Status { get; set; }
         public decimal Speed { get; set; }
         public decimal DoorsDelay { get; set; }
+        public int CurrentFloor { get; set; }
 
         public Elevator(decimal speed, decimal doorsDelay)
         {

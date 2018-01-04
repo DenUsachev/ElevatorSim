@@ -1,6 +1,6 @@
 ﻿namespace ElevatorSim
 {
-    class Building
+    public class Building
     {
         public int FloorQty { get; set; }
         public decimal FloorHeigth { get; set; }
