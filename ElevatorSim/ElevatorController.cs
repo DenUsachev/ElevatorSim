@@ -10,7 +10,7 @@ namespace ElevatorSim
         {
             if (_elevator != null)
             {
-                Console.WriteLine("Elevator is on the floor: {0}.", _elevator.CurrentFloor);
+                Console.WriteLine("[{0:T}]Elevator is on the floor: {1}.", DateTime.Now, _elevator.CurrentFloor);
             }
         }
 
@@ -27,13 +27,13 @@ namespace ElevatorSim
             switch (_elevator.Status)
             {
                 case ElevatorStatus.DoorsClosed:
-                    Console.WriteLine("Elevator's doors are closed.");
+                    Console.WriteLine("[{0:T}]Elevator's doors are closed.", DateTime.Now);
                     break;
                 case ElevatorStatus.DoorsOpen:
-                    Console.WriteLine("Elevator's doors are open.");
+                    Console.WriteLine("[{0:T}]Elevator's doors are open.", DateTime.Now);
                     break;
                 case ElevatorStatus.OnTheMove:
-                    Console.WriteLine("Elevator is moving. Current floor: {0}", _elevator.CurrentFloor);
+                    Console.WriteLine("[{0:T}]Elevator is moving. Current floor: {1}", DateTime.Now, _elevator.CurrentFloor);
                     break;
                 case ElevatorStatus.Idle:
                     break;

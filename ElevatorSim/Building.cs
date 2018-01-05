@@ -29,7 +29,7 @@ namespace ElevatorSim
 
         public void CallElevator(int floor)
         {
-            Console.WriteLine("Elevator was called to the floor: {0}", floor);
+            Console.WriteLine("[{0:T}]Elevator was called to the floor: {1}", DateTime.Now, floor);
             WaitElevator();
             if (floor == Elevator.CurrentFloor)
             {
