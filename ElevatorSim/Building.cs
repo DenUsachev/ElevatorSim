@@ -1,4 +1,7 @@
-﻿namespace ElevatorSim
+﻿using System;
+using System.Threading;
+
+namespace ElevatorSim
 {
     public class Building
     {
@@ -20,7 +23,22 @@
         {
             elevator.Subscribe(_controller);
             Elevator = elevator;
-            Elevator.Set(FIRST_FLOOR);
+            Elevator.Init(FIRST_FLOOR);
+        }
+
+        public void MoveElevator(int floor)
+        {
+            if (floor > FloorQty || floor < FIRST_FLOOR)
+            {
+                throw new ArgumentException("Incorrect floor number", floor.ToString());
+            }
+            var movementModifier = floor > Elevator.CurrentFloor ? 1 : -1;
+            while (Elevator.CurrentFloor != floor)
+            {
+                Thread.Sleep((int)Math.Round(FloorHeigth / Elevator.Speed * 1000));
+                Elevator.SetFloor(Elevator.CurrentFloor + movementModifier);
+            }
+            Elevator.Arrive();
         }
     }
 }

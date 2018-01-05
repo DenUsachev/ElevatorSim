@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Globalization;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace ElevatorSim
 {
@@ -7,6 +9,7 @@ namespace ElevatorSim
     {
         private static Building _building;
         private static Elevator _elevator;
+        private static bool _runningSimulation = false;
 
         static void Main(string[] args)
         {
@@ -33,9 +36,39 @@ namespace ElevatorSim
 
             _elevator = new Elevator(elevatorSpeed.Value, doorsDelay.Value);
 
-            Console.WriteLine("Initial set-up is complete. Hit Enter to run simulation. Hit Q to stop simulation.");
+            Console.WriteLine("Initial set-up is complete. Hit Enter to run simulation.");
             Console.ReadLine();
+            RunSimulator();
+        }
+
+        private static void RunSimulator()
+        {
+            Console.WriteLine("Simulator is running. Hit Q or q and then press Enter to stop simulation.");
             _building.SetElevator(_elevator);
+            _runningSimulation = true;
+            var inputRegex = new Regex(@"^(?<innerCall>\d{1,2}$)|^(?<control>q)$|^(?<control>Q)$|^(?<floorCall>L\d{1,2})$", RegexOptions.Compiled);
+            while (_runningSimulation)
+            {
+                var userInput = Console.ReadLine();
+                var regexMatch = inputRegex.Match(userInput);
+                if (regexMatch.Success)
+                {
+                    if (regexMatch.Groups["control"].Success)
+                    {
+                        _runningSimulation = false;
+                    }
+                    else if (regexMatch.Groups["innerCall"].Success)
+                    {
+                        var floor = int.Parse(regexMatch.Groups["innerCall"].Value);
+                        _building.MoveElevator(floor);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect input.");
+                }
+            }
+            Console.WriteLine("\n\n*** Simulation terminated. Press any key to exit. ***");
             Console.ReadLine();
         }
 

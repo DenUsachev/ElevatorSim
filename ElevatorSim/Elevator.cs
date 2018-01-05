@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace ElevatorSim
 {
     public class Elevator : IObservable<Elevator>
     {
         private readonly List<IObserver<Elevator>> _elevatorObservers;
-        private decimal _speed;
-        private decimal _doorsDelay;
         private bool _doorsClosed = true;
 
+        public decimal Speed { get; }
+        public decimal DoorsDelay { get; }
         public ElevatorStatus Status { get; private set; }
         public int CurrentFloor { get; private set; }
 
@@ -29,16 +30,29 @@ namespace ElevatorSim
         {
             _elevatorObservers = new List<IObserver<Elevator>>();
 
-            _speed = speed;
-            _doorsDelay = doorsDelay;
+            Speed = speed;
+            DoorsDelay = doorsDelay;
         }
 
-        private void Move(int floor)
+        public void Arrive()
         {
-
+            Status = ElevatorStatus.DoorsOpening;
+            NotifyObservers();
+            _doorsClosed = false;
+            Thread.Sleep((int)(DoorsDelay * 1000));
+            Status = ElevatorStatus.DoorsClosing;
+            _doorsClosed = true;
+            NotifyObservers();
         }
 
-        public void Set(int floor)
+        public void SetFloor(int floor)
+        {
+            Status = ElevatorStatus.OnTheMove;
+            CurrentFloor = floor;
+            NotifyObservers();
+        }
+
+        public void Init(int floor)
         {
             Status = ElevatorStatus.Idle;
             CurrentFloor = 1;

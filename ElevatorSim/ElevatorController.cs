@@ -12,7 +12,6 @@ namespace ElevatorSim
             {
                 Console.WriteLine("Elevator is on the floor: {0}.", _elevator.CurrentFloor);
             }
-            Console.WriteLine("Elevator is Idle.");
         }
 
         public void OnError(Exception error)
@@ -29,10 +28,10 @@ namespace ElevatorSim
             switch (_elevator.Status)
             {
                 case ElevatorStatus.DoorsClosing:
-                    Console.WriteLine("Elevator's doors are closing.");
+                    Console.WriteLine("Elevator's doors are closed.");
                     break;
                 case ElevatorStatus.DoorsOpening:
-                    Console.WriteLine("Elevator's doors are opening.");
+                    Console.WriteLine("Elevator's doors are open.");
                     break;
                 case ElevatorStatus.OnTheMove:
                     Console.WriteLine("Elevator is moving. Current floor: {0}", _elevator.CurrentFloor);
