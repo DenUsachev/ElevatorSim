@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ElevatorSim
 {
@@ -77,45 +76,41 @@ namespace ElevatorSim
 
             while (_runningSimulation)
             {
-                Task.Factory.StartNew(() =>
+                var userInput = Console.ReadLine();
+                var regexMatch = inputRegex.Match(userInput);
+                if (regexMatch.Success)
                 {
-                    var userInput = Console.ReadLine();
-                    var regexMatch = inputRegex.Match(userInput);
-                    if (regexMatch.Success)
+                    try
                     {
-                        try
+                        if (regexMatch.Groups["control"].Success)
                         {
-                            if (regexMatch.Groups["control"].Success)
+                            _runningSimulation = false;
+                        }
+                        else
+                        {
+                            int floor;
+                            if (regexMatch.Groups["innerCall"].Success)
                             {
-                                _runningSimulation = false;
+                                floor = int.Parse(regexMatch.Groups["innerCall"].Value);
+                                _building.MoveElevator(floor);
                             }
-                            else
+                            else if (regexMatch.Groups["floorCall"].Success)
                             {
-                                int floor;
-                                if (regexMatch.Groups["innerCall"].Success)
-                                {
-                                    floor = int.Parse(regexMatch.Groups["innerCall"].Value);
-                                    _building.MoveElevator(floor);
-                                }
-                                else if (regexMatch.Groups["floorCall"].Success)
-                                {
-                                    floor = int.Parse(regexMatch.Groups["floorCall"].Value.Substring(1));
-                                    _building.CallElevator(floor);
-                                }
+                                floor = int.Parse(regexMatch.Groups["floorCall"].Value.Substring(1));
+                                _building.CallElevator(floor);
                             }
                         }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine("Incorrect action: {0}", e.Message);
-                        }
                     }
-                    else
+                    catch (Exception e)
                     {
-                        Console.WriteLine("Incorrect input.");
+                        ConsoleHelper.FormattedOutputAsync("Incorrect action: {0}", e.Message);
                     }
-                }, Token);
+                }
+                else
+                {
+                    ConsoleHelper.FormattedOutputAsync("Incorrect input.");
+                }
             }
-            TokenSource.Cancel();
             _building.Dispose();
             Console.WriteLine($"{Environment.NewLine}*** Simulation terminated. ***");
             Environment.Exit(0);

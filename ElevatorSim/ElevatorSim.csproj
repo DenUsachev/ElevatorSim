@@ -3,6 +3,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <ApplicationIcon />
-    <StartupObject />
+    <StartupObject>ElevatorSim.Program</StartupObject>
+    <RuntimeIdentifier></RuntimeIdentifier>
   </PropertyGroup>
 </Project>
