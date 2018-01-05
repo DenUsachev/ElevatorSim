@@ -36,13 +36,17 @@ namespace ElevatorSim
 
         public void Arrive()
         {
-            Status = ElevatorStatus.DoorsOpening;
-            NotifyObservers();
-            _doorsClosed = false;
-            Thread.Sleep((int)(DoorsDelay * 1000));
-            Status = ElevatorStatus.DoorsClosing;
-            _doorsClosed = true;
-            NotifyObservers();
+            if (_doorsClosed)
+            {
+                Status = ElevatorStatus.DoorsOpening;
+                NotifyObservers();
+                _doorsClosed = false;
+                Thread.Sleep((int) (DoorsDelay * 1000));
+                Status = ElevatorStatus.DoorsClosing;
+                _doorsClosed = true;
+                NotifyObservers();
+                Status = ElevatorStatus.Idle;
+            }
         }
 
         public void SetFloor(int floor)

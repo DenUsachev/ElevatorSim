@@ -2,11 +2,15 @@
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ElevatorSim
 {
     class Program
     {
+        private static readonly CancellationTokenSource TokenSource = new CancellationTokenSource();
+        private static readonly CancellationToken Token = TokenSource.Token;
         private static Building _building;
         private static Elevator _elevator;
         private static bool _runningSimulation = false;
@@ -47,29 +51,49 @@ namespace ElevatorSim
             _building.SetElevator(_elevator);
             _runningSimulation = true;
             var inputRegex = new Regex(@"^(?<innerCall>\d{1,2}$)|^(?<control>q)$|^(?<control>Q)$|^(?<floorCall>L\d{1,2})$", RegexOptions.Compiled);
+
             while (_runningSimulation)
             {
-                var userInput = Console.ReadLine();
-                var regexMatch = inputRegex.Match(userInput);
-                if (regexMatch.Success)
+                Task.Factory.StartNew(() =>
                 {
-                    if (regexMatch.Groups["control"].Success)
+                    var userInput = Console.ReadLine();
+                    var regexMatch = inputRegex.Match(userInput);
+                    int floor;
+                    if (regexMatch.Success)
                     {
-                        _runningSimulation = false;
+                        try
+                        {
+                            if (regexMatch.Groups["control"].Success)
+                            {
+                                _runningSimulation = false;
+                            }
+                            else if (regexMatch.Groups["innerCall"].Success)
+                            {
+                                floor = int.Parse(regexMatch.Groups["innerCall"].Value);
+                                _building.MoveElevator(floor);
+                            }
+                            else if (regexMatch.Groups["floorCall"].Success)
+                            {
+                                floor = int.Parse(regexMatch.Groups["floorCall"].Value.Substring(1));
+                                _building.CallElevator(floor);
+                                Console.WriteLine("Elevator was called to the floor: {0}", floor);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Incorrect action: {0}", e.Message);
+                        }
                     }
-                    else if (regexMatch.Groups["innerCall"].Success)
+                    else
                     {
-                        var floor = int.Parse(regexMatch.Groups["innerCall"].Value);
-                        _building.MoveElevator(floor);
+                        Console.WriteLine("Incorrect input.");
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Incorrect input.");
-                }
+                }, Token);
             }
+            TokenSource.Cancel();
             Console.WriteLine("\n\n*** Simulation terminated. Press any key to exit. ***");
             Console.ReadLine();
+
         }
 
         private static decimal? ReadDecimalValueFromConsole(string input)

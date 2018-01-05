@@ -26,6 +26,19 @@ namespace ElevatorSim
             Elevator.Init(FIRST_FLOOR);
         }
 
+        public void CallElevator(int floor)
+        {
+            WaitElevator();
+            if (floor == Elevator.CurrentFloor)
+            {
+                Elevator.Arrive();
+            }
+            else
+            {
+                MoveElevator(floor);
+            }
+        }
+
         public void MoveElevator(int floor)
         {
             if (floor > FloorQty || floor < FIRST_FLOOR)
@@ -39,6 +52,14 @@ namespace ElevatorSim
                 Elevator.SetFloor(Elevator.CurrentFloor + movementModifier);
             }
             Elevator.Arrive();
+        }
+
+        private void WaitElevator()
+        {
+            while (Elevator.Status != ElevatorStatus.Idle)
+            {
+                Thread.Sleep(100);
+            }
         }
     }
 }
