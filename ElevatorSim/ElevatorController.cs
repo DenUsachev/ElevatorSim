@@ -16,7 +16,6 @@ namespace ElevatorSim
 
         public void OnError(Exception error)
         {
-            throw new NotImplementedException();
         }
 
         public void OnNext(Elevator value)

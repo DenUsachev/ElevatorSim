@@ -20,9 +20,9 @@ namespace ElevatorSim
             _controller = new ElevatorController();
         }
 
-        public void SetElevator(Elevator elevator)
+        public void InitElevator(Elevator elevator)
         {
-            elevator.Subscribe(_controller);
+            _elevatorSubscriber = elevator.Subscribe(_controller);
             Elevator = elevator;
             Elevator.Init(FIRST_FLOOR);
         }
@@ -66,7 +66,7 @@ namespace ElevatorSim
 
         public void Dispose()
         {
-            _elevatorSubscriber.Dispose();
+            _elevatorSubscriber?.Dispose();
         }
     }
 }
