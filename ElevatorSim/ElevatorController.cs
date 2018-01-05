@@ -27,10 +27,10 @@ namespace ElevatorSim
             }
             switch (_elevator.Status)
             {
-                case ElevatorStatus.DoorsClosing:
+                case ElevatorStatus.DoorsClosed:
                     Console.WriteLine("Elevator's doors are closed.");
                     break;
-                case ElevatorStatus.DoorsOpening:
+                case ElevatorStatus.DoorsOpen:
                     Console.WriteLine("Elevator's doors are open.");
                     break;
                 case ElevatorStatus.OnTheMove:

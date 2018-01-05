@@ -3,10 +3,11 @@ using System.Threading;
 
 namespace ElevatorSim
 {
-    public class Building
+    public class Building : IDisposable
     {
         private const int FIRST_FLOOR = 1;
         private readonly ElevatorController _controller;
+        private IDisposable _elevatorSubscriber;
 
         public int FloorQty { get; set; }
         public decimal FloorHeigth { get; set; }
@@ -28,6 +29,7 @@ namespace ElevatorSim
 
         public void CallElevator(int floor)
         {
+            Console.WriteLine("Elevator was called to the floor: {0}", floor);
             WaitElevator();
             if (floor == Elevator.CurrentFloor)
             {
@@ -60,6 +62,11 @@ namespace ElevatorSim
             {
                 Thread.Sleep(100);
             }
+        }
+
+        public void Dispose()
+        {
+            _elevatorSubscriber.Dispose();
         }
     }
 }

@@ -38,11 +38,11 @@ namespace ElevatorSim
         {
             if (_doorsClosed)
             {
-                Status = ElevatorStatus.DoorsOpening;
+                Status = ElevatorStatus.DoorsOpen;
                 NotifyObservers();
                 _doorsClosed = false;
                 Thread.Sleep((int) (DoorsDelay * 1000));
-                Status = ElevatorStatus.DoorsClosing;
+                Status = ElevatorStatus.DoorsClosed;
                 _doorsClosed = true;
                 NotifyObservers();
                 Status = ElevatorStatus.Idle;
@@ -51,6 +51,13 @@ namespace ElevatorSim
 
         public void SetFloor(int floor)
         {
+            if (!_doorsClosed)
+            {
+                Thread.Sleep((int)(DoorsDelay * 1000));
+                Status = ElevatorStatus.DoorsClosed;
+                _doorsClosed = true;
+                NotifyObservers();
+            }
             Status = ElevatorStatus.OnTheMove;
             CurrentFloor = floor;
             NotifyObservers();

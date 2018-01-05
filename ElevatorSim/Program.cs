@@ -76,7 +76,6 @@ namespace ElevatorSim
                             {
                                 floor = int.Parse(regexMatch.Groups["floorCall"].Value.Substring(1));
                                 _building.CallElevator(floor);
-                                Console.WriteLine("Elevator was called to the floor: {0}", floor);
                             }
                         }
                         catch (Exception e)
@@ -91,6 +90,7 @@ namespace ElevatorSim
                 }, Token);
             }
             TokenSource.Cancel();
+            _building.Dispose();
             Console.WriteLine("\n\n*** Simulation terminated. Press any key to exit. ***");
             Console.ReadLine();
 

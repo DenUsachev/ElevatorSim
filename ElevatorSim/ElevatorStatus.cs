@@ -4,7 +4,7 @@
     {
         Idle,
         OnTheMove,
-        DoorsOpening,
-        DoorsClosing
+        DoorsOpen,
+        DoorsClosed
     }
 }
